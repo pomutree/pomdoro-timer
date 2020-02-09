@@ -1,56 +1,35 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+    <div id="titleBar" >
+      <!-- <v-button id="closed" max-width="10" >×</v-button> -->
+    </div>
+    <v-app-bar id="title-bar" app flat color="transparent">
+      <div class="d-flex align-center title white--text" >
+        Pomodoro Timer
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn text>
+        <v-icon class="white--text">mdi-settings</v-icon>
       </v-btn>
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <Timer/>
     </v-content>
+
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import Timer from './components/Timer';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    Timer,
   },
 
   data: () => ({
@@ -58,3 +37,23 @@ export default {
   }),
 };
 </script>
+
+<style lang="scss">
+  #app { background-color: #d9534f; }
+  #titleBar {
+    height: 15px;
+    background-color: transparent;
+    -webkit-app-region: drag; /* ドラッグでwindowの移動可能にする */
+    text-align: right;
+  }
+  #closed {
+    margin: 5px;
+    background-color: blue;
+  }
+  main {
+    -webkit-app-region: no-drag; /* ドラッグでwindowの移動可能にする */
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+</style>
