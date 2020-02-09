@@ -3,10 +3,8 @@
     <transition name="modal">
      <v-row no-gutters>
         <div class="timer">
-          <span class="timer-ssession js-session white--text">work</span>
-          <!-- <span class="timer-ssession js-session white--text">{{ isBreakTime ? 'break' : 'work' }}</span> -->
-          <span class="timer-countdown js-countdown white--text">11111</span>
-          <!-- <span class="timer__countdown js-countdown">{{`${minutes}:${seconds}`}}</span> -->
+          <span class="timer-ssession js-session white--text">{{ isBreakTime ? 'break' : 'work' }}</span>
+          <span class="timer-countdown js-countdown white--text">{{`${minutes}:${seconds}`}}</span>
         </div>
       </v-row >
     </transition>
@@ -17,24 +15,24 @@
 
         <v-col cols=3>
           <div style="height: 0.5rem;"></div>
-          <button class="btn-sm">
-          <!-- <button @click="reset" title="reset" class="btn-sm"> -->
+          <!-- <v-btn text class="btn-sm"> -->
+          <!-- <v-btn text @click="reset" title="reset" class="btn-sm"> -->
+          <v-btn text @click="reset" class="btn-sm">
             <svg width="16" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M8 4.023c4.398 0 8 3.556 8 7.954 0 4.397-3.602 8-8 8s-8-3.603-8-8h2.012A5.97 5.97 0 0 0 8 17.965a5.97 5.97 0 0 0 5.988-5.988A5.97 5.97 0 0 0 8 5.988v4.024L2.994 5.006 8 0v4.023z" fill="#FFF" fill-rule="nonzero"/></svg>
-          </button>
+          </v-btn>
         </v-col>
 
         <v-col cols=4>
-          <button class="btn-md">
-          <!-- <button @click="toggleTimer" class="btn-md"> -->
-            <span class="flex-center">
-            <!-- <span v-if="isTimerActive" class="flex-center"> -->
+          <v-btn text @click="toggleTimer" class="btn-md">
+            <!-- <span class="flex-center"> -->
+            <span v-if="isTimerActive" class="flex-center">
               <svg width="13" height="14" xmlns="http://www.w3.org/2000/svg"><path d="M8.016.016H12v13.968H8.016V.016zM0 13.984V.016h3.984v13.968H0z" fill="#FFF" fill-rule="nonzero"/></svg>
             </span>
-            <span class="flex-center">
-            <!-- <span v-else class="flex-center"> -->
+            <!-- <span class="flex-center"> -->
+            <span v-else class="flex-center">
               <svg width="14" height="18" xmlns="http://www.w3.org/2000/svg"><path d="M0 0l14 9-14 9z" fill="#FFF" fill-rule="nonzero"/></svg>
             </span>
-          </button>
+          </v-btn>
         </v-col>
 
         <v-col cols=3>
@@ -54,13 +52,74 @@
 
 <script>
 export default {
-  name: 'Timer',
   data() {
     return {
-      isShown: false
+      // Settings
+      initWork: 25,
+      initShortBreak: 5,
+
+      // App state
+      isBreakTime: false,
+      isTimerActive: false,
+      minutes: 25,
+      seconds: '00',
+      timer: null,
+      round: 0,
+
+      // UI
+      isModalOpen: false,
     }
   },
-};
+  methods: {
+    toggleTimer: function() {
+      let self = this;
+      function countDown() {
+        let seconds = Number(self.$data.seconds);
+        let minutes = self.minutes;
+        let isBreak = self.isBreakTime;
+
+        if (seconds === 0) {
+          if (minutes === 0) {
+            isBreak ? self.minutes = self.initWork : self.minutes = self.initShortBreak;
+            self.isBreakTime = !self.isBreakTime;
+
+          } else { // Remove minute + start counting down from 60 seconds again
+            self.minutes--;
+            self.seconds = '59';
+          }
+        } else { // Remove seconds + if less than 10 prepend 0
+          seconds <= 10 ? self.seconds = `0${self.seconds - 1}` : self.seconds = `${self.seconds - 1}`;
+        }
+      }
+
+      // toggle timer
+      self.isTimerActive ? clearInterval(self.timer) : self.timer = setInterval(countDown, 1000);
+      self.isTimerActive = !self.isTimerActive;
+    },
+    // resetSettings() {
+    //   this.initWork= 25;
+    //   this.initShortBreak= 5;
+    //   this.isBreakTime ? this.minutes = this.initShortBreak : this.minutes = this.initWork;
+    // },
+    // resetUI() {
+    //   this.isBreakTime = false;
+    //   this.isTimerActive = false;
+    //   this.minutes = this.initWork;
+    //   this.seconds = '00';
+    //   clearInterval(this.timer);
+    // },
+    reset: function() {
+      this.initWork= 25;
+      this.initShortBreak= 5;
+      this.isBreakTime ? this.minutes = this.initShortBreak : this.minutes = this.initWork;
+      this.isBreakTime = false;
+      this.isTimerActive = false;
+      this.minutes = this.initWork;
+      this.seconds = '00';
+      clearInterval(this.timer);
+    },
+  },
+}
 </script>
 
 <style lang="scss">
