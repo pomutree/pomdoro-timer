@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     siteThemeChange: function (isBreakTime) {
-      console.log(isBreakTime);
       this.siteTheme = isBreakTime ? '#3eab45' : '#a83232'
     },
   },
