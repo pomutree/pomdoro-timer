@@ -37,13 +37,17 @@
 
         <v-col cols=3>
           <div style="height: 0.5rem;"></div>
-          <button class="btn-sm">
-          <!-- <button title="info" class="btn-sm" @click="toggleModal"> -->
+          <v-btn text title="info" class="btn-sm" @click="toggleModal">
             <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M9.016 7V4.984h1.968V7H9.016zM10 18.016c4.406 0 8.016-3.61 8.016-8.016 0-4.406-3.61-8.016-8.016-8.016-4.406 0-8.016 3.61-8.016 8.016 0 4.406 3.61 8.016 8.016 8.016zm0-18A9.963 9.963 0 0 1 19.984 10 9.963 9.963 0 0 1 10 19.984 9.963 9.963 0 0 1 .016 10 9.963 9.963 0 0 1 10 .016zm-.984 15v-6h1.968v6H9.016z" fill="#FFF" fill-rule="nonzero"/></svg>
-          </button>
+          </v-btn>
         </v-col>
 
       </v-row >
+
+      <!-- <app-modal v-if="isModalOpen" @close="closeModal">
+        <h3 slot="header">Pomodoro</h3>
+        <p slot="body">The pomodoro technique is a time management method that uses a timer to break down work into intervals separated by short breaks.</p>
+      </app-modal> -->
 
     </div>
   </v-container>
@@ -80,9 +84,16 @@ export default {
 
         if (seconds === 0) {
           if (minutes === 0) {
+            // Count up
+            self.seconds = '00'
             isBreak ? self.minutes = self.initWork : self.minutes = self.initShortBreak;
             self.isBreakTime = !self.isBreakTime;
-
+            self.$emit('timeUp', self.isBreakTime);
+            clearInterval(self.timer)
+            // notification
+            let title = isBreak ? "Break" : "Work"
+            var notification = new Notification(title, {body: 'time up !!'})
+            self.isTimerActive = !self.isTimerActive
           } else { // Remove minute + start counting down from 60 seconds again
             self.minutes--;
             self.seconds = '59';
@@ -91,10 +102,9 @@ export default {
           seconds <= 10 ? self.seconds = `0${self.seconds - 1}` : self.seconds = `${self.seconds - 1}`;
         }
       }
-
-      // toggle timer
       self.isTimerActive ? clearInterval(self.timer) : self.timer = setInterval(countDown, 1000);
       self.isTimerActive = !self.isTimerActive;
+      // this.$emit('event');
     },
     // resetSettings() {
     //   this.initWork= 25;
@@ -116,7 +126,15 @@ export default {
       this.isTimerActive = false;
       this.minutes = this.initWork;
       this.seconds = '00';
+      this.$emit('timeUp', this.isBreakTime);
       clearInterval(this.timer);
+    },
+    toggleModal: function() {
+      this.isModalOpen = !this.isModalOpen;
+      alert("electron version: " + process.versions.electron + "\n" +
+        "vue version: " + require('../../package.json').dependencies.vue + "\n" +
+        "system version: " + process.getSystemVersion()
+      );
     },
   },
 }

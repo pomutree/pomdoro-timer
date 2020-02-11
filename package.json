@@ -12,8 +12,12 @@
     "postuninstall": "electron-builder install-app-deps"
   },
   "main": "background.js",
+  "build": {
+    "appId": "com.myapp.id"
+  },
   "dependencies": {
     "core-js": "^2.6.5",
+    "node-notifier": "^6.0.0",
     "vue": "^2.6.10",
     "vuetify": "^2.1.0"
   },

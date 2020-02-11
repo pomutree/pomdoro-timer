@@ -1,7 +1,6 @@
 <template>
-  <v-app>
+  <v-app id="site" v-bind:style="{ 'background-color': siteTheme }">
     <div id="titleBar" >
-      <!-- <v-button id="closed" max-width="10" >×</v-button> -->
     </div>
     <v-app-bar id="title-bar" app flat color="transparent">
       <div class="d-flex align-center title white--text" >
@@ -16,7 +15,7 @@
     </v-app-bar>
 
     <v-content>
-      <Timer/>
+      <Timer @timeUp="siteThemeChange"/>
     </v-content>
 
   </v-app>
@@ -32,24 +31,31 @@ export default {
     Timer,
   },
 
-  data: () => ({
-    //
-  }),
+  data () {
+    return {
+      siteTheme: '#a83232'
+    }
+  },
+  methods: {
+    siteThemeChange: function (isBreakTime) {
+      console.log(isBreakTime);
+      this.siteTheme = isBreakTime ? '#3eab45' : '#a83232'
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-  #app { background-color: #d9534f; }
   #titleBar {
     height: 15px;
     background-color: transparent;
     -webkit-app-region: drag; /* ドラッグでwindowの移動可能にする */
     text-align: right;
   }
-  #closed {
-    margin: 5px;
-    background-color: blue;
-  }
+  // #closed {
+  //   margin: 5px;
+  //   background-color: blue;
+  // }
   main {
     -webkit-app-region: no-drag; /* ドラッグでwindowの移動可能にする */
   }

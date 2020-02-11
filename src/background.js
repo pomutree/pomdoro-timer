@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, Notification } from 'electron'
 import {
   createProtocol,
   /* installVueDevtools */
@@ -19,6 +19,8 @@ function createWindow () {
   win = new BrowserWindow({
     frame: false,
     resizable: false,
+    // width: 1000,
+    // height: 800,
     width: 300,
     height: 480,
     webPreferences: {
@@ -78,6 +80,17 @@ app.on('ready', async () => {
 
   }
   createWindow()
+  const notifier = require('node-notifier');
+  notifier.notify({
+    appName: 'com.myapp.id',
+    title: "Hello",
+    message: "Hello world!",
+    wait: true
+  }, (err) => {
+    if (err) {
+      console.error('Snoretoast error: ', err);
+    }
+  });
 })
 
 // Exit cleanly on request from parent process in development mode.
