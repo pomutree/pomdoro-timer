@@ -2,19 +2,15 @@
   <v-app id="site" v-bind:style="{ 'background-color': siteTheme }">
     <div id="titleBar" >
     </div>
-    <v-app-bar id="title-bar" app flat color="transparent">
-      <div class="d-flex align-center title white--text" >
+    <v-app-bar app flat color="transparent" >
+      <v-spacer></v-spacer>
+      <div class="d-flex align-center title  white--text" >
         Pomodoro Timer
       </div>
-
       <v-spacer></v-spacer>
-
-      <v-btn text>
-        <v-icon class="white--text">mdi-settings</v-icon>
-      </v-btn>
     </v-app-bar>
 
-    <v-content>
+    <v-content class="pt-4">
       <Timer @timeUp="siteThemeChange"/>
     </v-content>
 
@@ -46,7 +42,7 @@ export default {
 
 <style lang="scss">
   #titleBar {
-    height: 15px;
+    height: 56px;
     background-color: transparent;
     -webkit-app-region: drag; /* ドラッグでwindowの移動可能にする */
     text-align: right;

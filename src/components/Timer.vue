@@ -12,7 +12,6 @@
 
     <div class="controllers">
       <v-row class="control-btn" justify="center" align-content="center">
-
         <!-- <v-col cols=4 class="red lighten-3"> -->
         <v-col cols=4>
           <div style="height: 0.5rem;"></div>
@@ -20,7 +19,6 @@
             <v-icon class="white--text">mdi-replay</v-icon>
           </v-btn>
         </v-col>
-
         <!-- <v-col cols=4 class="blue lighten-3"> -->
         <v-col cols=4>
           <v-btn text x-large fab outlined @click="toggleTimer" class="btn-md">
@@ -32,17 +30,36 @@
             </span>
           </v-btn>
         </v-col>
-
         <!-- <v-col cols=4 class="green lighten-3"> -->
         <v-col cols=4>
           <div style="height: 0.5rem;"></div>
           <div class="align-center">
-            <v-btn text fab outlined title="info" class="btn-sm" @click="toggleModal">
+            <v-btn text fab outlined class="btn-sm" @click="toggleModal">
               <v-icon class="white--text">mdi-information-outline</v-icon>
             </v-btn>
           </div>
         </v-col>
 
+        <!-- <v-col cols=3 class="red lighten-3"> -->
+        <v-col cols=3>
+          <v-btn text small fab outlined @click="reset" class="btn-sm">
+            <v-icon class="white--text">mdi-check-bold</v-icon>
+          </v-btn>
+        </v-col>
+        <!-- <v-col cols=3 class="blue lighten-3"> -->
+        <v-col cols=3>
+          <v-btn text small fab outlined @click="countUp" class="btn-md">
+            <v-icon class="white--text">mdi-arrow-up-bold</v-icon>
+          </v-btn>
+        </v-col>
+        <!-- <v-col cols=3 class="green lighten-3"> -->
+        <v-col cols=3>
+          <div class="align-center">
+            <v-btn text small fab outlined title="info" class="btn-sm" @click="toggleModal">
+              <v-icon class="white--text">mdi-settings</v-icon>
+            </v-btn>
+          </div>
+        </v-col>
       </v-row >
 
       <!-- <app-modal v-if="isModalOpen" @close="closeModal">
@@ -130,6 +147,9 @@ export default {
       this.$emit('timeUp', this.isBreakTime);
       clearInterval(this.timer);
     },
+    countUp: function() {
+
+    },
     toggleModal: function() {
       this.isModalOpen = !this.isModalOpen;
       alert("electron version: " + process.versions.electron + "\n" +
@@ -150,7 +170,7 @@ export default {
   }
   .control-btn {
     text-align: center;
-    height: 160px;
+    height: 220px;
   }
   // Main
   .timer {
@@ -187,40 +207,4 @@ export default {
   .timer-ssession { font-weight: 500; }
   .timer-countdown { font-size: 2.5rem; }
 
-  // .btn-sm {
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   flex: 0 0 auto;
-  //   width: calc(3rem + 4px);
-  //   height: calc(3rem + 4px);
-  //   line-height: 3rem;
-  //   border: 2px solid rgba(255, 255, 255, .25);
-  //   border-radius: 50%;
-  // }
-  // // Controllers
-  // .btn-md {
-  //   margin: 0 auto;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   flex: 0 0 auto;
-  //   width: calc(4rem + 4px);
-  //   height: calc(4rem + 4px);
-  //   line-height: 3rem;
-  //   border: 2px solid rgba(255, 255, 255, .25);
-  //   border-radius: 50%;
-  // }
-  //
-  // .btn-sm:hover,
-  // .btn-md:hover {
-  //   border-color: #fff;
-  // }
-  // helper
-  .flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-  }
 </style>
