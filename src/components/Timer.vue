@@ -1,26 +1,16 @@
 <template>
   <v-container id="site-container" fluid>
-    <transition name="modal">
-     <v-row no-gutters>
-        <div class="timer">
-          <span class="timer-ssession js-session white--text">{{ isBreakTime ? 'break' : 'work' }}</span>
-          <span class="timer-countdown js-countdown white--text">{{`${minutes}:${seconds}`}}</span>
-        </div>
-      </v-row >
-    </transition>
-
+    <div class="timer">
+      <span class="timer-ssession js-session white--text">{{ isBreakTime ? 'break' : 'work' }}</span>
+      <span class="timer-countdown js-countdown white--text">{{`${minutes}:${seconds}`}}</span>
+    </div>
 
     <div class="controllers">
       <v-row class="control-btn" justify="center" align-content="center">
-        <!-- <v-col cols=4 class="red lighten-3"> -->
-        <v-col cols=4>
-          <div style="height: 0.5rem;"></div>
-          <v-btn text fab outlined @click="reset" class="btn-sm">
-            <v-icon class="white--text">mdi-replay</v-icon>
-          </v-btn>
-        </v-col>
+        <Reset @reset="reset"/>
         <!-- <v-col cols=4 class="blue lighten-3"> -->
-        <v-col cols=4>
+        <Play :initWork="initShortBreak" :initShortBreak="5",/>
+        <!-- <v-col cols=4>
           <v-btn text x-large fab outlined @click="toggleTimer" class="btn-md">
             <span v-if="isTimerActive" class="flex-center">
               <v-icon class="white--text">mdi-pause</v-icon>
@@ -29,16 +19,9 @@
               <v-icon class="white--text">mdi-play</v-icon>
             </span>
           </v-btn>
-        </v-col>
-        <!-- <v-col cols=4 class="green lighten-3"> -->
-        <v-col cols=4>
-          <div style="height: 0.5rem;"></div>
-          <div class="align-center">
-            <v-btn text fab outlined class="btn-sm" @click="toggleModal">
-              <v-icon class="white--text">mdi-information-outline</v-icon>
-            </v-btn>
-          </div>
-        </v-col>
+        </v-col> -->
+
+        <Information />
 
         <!-- <v-col cols=3 class="red lighten-3"> -->
         <v-col cols=3>
@@ -55,7 +38,7 @@
         <!-- <v-col cols=3 class="green lighten-3"> -->
         <v-col cols=3>
           <div class="align-center">
-            <v-btn text small fab outlined title="info" class="btn-sm" @click="toggleModal">
+            <v-btn text small fab outlined title="info" class="btn-sm">
               <v-icon class="white--text">mdi-settings</v-icon>
             </v-btn>
           </div>
@@ -73,10 +56,17 @@
 </template>
 
 <script>
+import Reset from './Reset'
+import Play from './Play'
+import Information from './Information'
 export default {
+  components: {
+    Reset,
+    Information,
+    Play,
+  },
   data() {
     return {
-      // Settings
       initWork: 25,
       initShortBreak: 5,
 
@@ -93,69 +83,51 @@ export default {
     }
   },
   methods: {
-    toggleTimer: function() {
-      let self = this;
-      function countDown() {
-        let seconds = Number(self.$data.seconds);
-        let minutes = self.minutes;
-        let isBreak = self.isBreakTime;
 
-        if (seconds === 0) {
-          if (minutes === 0) {
-            // Count up
-            self.seconds = '00'
-            isBreak ? self.minutes = self.initWork : self.minutes = self.initShortBreak;
-            self.isBreakTime = !self.isBreakTime;
-            self.$emit('timeUp', self.isBreakTime);
-            clearInterval(self.timer)
-            // notification
-            let title = isBreak ? "Break" : "Work"
-            var notification = new Notification(title, {body: 'time up !!'})
-            self.isTimerActive = !self.isTimerActive
-          } else { // Remove minute + start counting down from 60 seconds again
-            self.minutes--;
-            self.seconds = '59';
-          }
-        } else { // Remove seconds + if less than 10 prepend 0
-          seconds <= 10 ? self.seconds = `0${self.seconds - 1}` : self.seconds = `${self.seconds - 1}`;
-        }
-      }
-      self.isTimerActive ? clearInterval(self.timer) : self.timer = setInterval(countDown, 1000);
-      self.isTimerActive = !self.isTimerActive;
-      // this.$emit('event');
-    },
-    // resetSettings() {
-    //   this.initWork= 25;
-    //   this.initShortBreak= 5;
-    //   this.isBreakTime ? this.minutes = this.initShortBreak : this.minutes = this.initWork;
     // },
-    // resetUI() {
-    //   this.isBreakTime = false;
-    //   this.isTimerActive = false;
-    //   this.minutes = this.initWork;
-    //   this.seconds = '00';
-    //   clearInterval(this.timer);
+    // toggleTimer: function() {
+    //   let self = this;
+    //   function countDown() {
+    //     let seconds = Number(self.$data.seconds);
+    //     let minutes = self.minutes;
+    //     let isBreak = self.isBreakTime;
+    //
+    //     if (seconds === 0) {
+    //       if (minutes === 0) {
+    //         // Count up
+    //         self.seconds = '00'
+    //         isBreak ? self.minutes = self.initWork : self.minutes = self.initShortBreak;
+    //         self.isBreakTime = !self.isBreakTime;
+    //         self.$emit('timeUp', self.isBreakTime);
+    //         clearInterval(self.timer)
+    //         // notification
+    //         let title = isBreak ? "Break" : "Work"
+    //         var notification = new Notification(title, {body: 'time up !!'})
+    //         self.isTimerActive = !self.isTimerActive
+    //       } else { // Remove minute + start counting down from 60 seconds again
+    //         self.minutes--;
+    //         self.seconds = '59';
+    //       }
+    //     } else { // Remove seconds + if less than 10 prepend 0
+    //       seconds <= 10 ? self.seconds = `0${self.seconds - 1}` : self.seconds = `${self.seconds - 1}`;
+    //     }
+    //   }
+    //   self.isTimerActive ? clearInterval(self.timer) : self.timer = setInterval(countDown, 1000);
+    //   self.isTimerActive = !self.isTimerActive;
+    //   // this.$emit('event');
     // },
-    reset: function() {
-      this.initWork= 25;
-      this.initShortBreak= 5;
+    reset() {
+      // this.initWork= 25;
+      // this.initShortBreak= 5;
+      if (!this.isTimerActive) this.isBreakTime = !this.isBreakTime
       this.isBreakTime ? this.minutes = this.initShortBreak : this.minutes = this.initWork;
-      this.isBreakTime = false;
       this.isTimerActive = false;
-      this.minutes = this.initWork;
       this.seconds = '00';
       this.$emit('timeUp', this.isBreakTime);
       clearInterval(this.timer);
     },
     countUp: function() {
 
-    },
-    toggleModal: function() {
-      this.isModalOpen = !this.isModalOpen;
-      alert("electron version: " + process.versions.electron + "\n" +
-        "vue version: " + require('../../package.json').dependencies.vue + "\n" +
-        "system version: " + process.getSystemVersion()
-      );
     },
   },
 }

@@ -18,15 +18,11 @@
 </template>
 
 <script>
-import Timer from './components/Timer';
-
+import Timer from './components/Timer'
 export default {
-  name: 'App',
-
   components: {
     Timer,
   },
-
   data () {
     return {
       siteTheme: '#a83232'
