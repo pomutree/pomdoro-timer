@@ -1,6 +1,6 @@
 <template>
   <v-col cols=4>
-    <v-btn text x-large fab outlined @click="toggleTimer" class="btn-md">
+    <v-btn text x-large fab outlined @click="toggleTimer" class="btn-md" :disabled="isCountUp">
       <span v-if="isTimerActive" class="flex-center">
         <v-icon class="white--text">mdi-pause</v-icon>
       </span>
@@ -15,10 +15,11 @@
 export default {
   props: {
     isTimerActive: Boolean,
+    isCountUp: Boolean,
   },
   methods: {
     toggleTimer: function() {
-      this.$emit('clickedPlayButton')
+      this.$emit('play')
     },
   },
 };
