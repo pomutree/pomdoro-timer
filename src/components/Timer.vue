@@ -127,10 +127,10 @@ export default {
       this.toggleTimer()
     },
     stopWatch: function() {
-      this.isOverHour = true
-      this.hour = '1'
-      this.minutes = '22'
-      this.seconds = '59'
+      this.hour = 0
+      this.minutes = '00'
+      this.seconds = '00'
+      this.isOverHour = false
       this.isCountUp = true
       this.toggleTimer()
     },

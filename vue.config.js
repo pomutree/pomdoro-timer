@@ -6,9 +6,9 @@ module.exports = {
     electronBuilder: {
       builderOptions: {
         mac: {
-          icon: 'src/assets/app.icns',
+          icon: 'src/assets/favicon.ico',
         },win: {
-          icon: 'src/assets/app.ico',
+          icon: 'src/assets/favicon.ico',
         },
       }
     }
