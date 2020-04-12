@@ -19,12 +19,12 @@ function createWindow () {
   win = new BrowserWindow({
     frame: false,
     resizable: false,
-    width: 1000,
-    height: 800,
+    // width: 1000,
+    // height: 800,
     x: 2500,
     y: 150,
-    // width: 300,
-    // height: 520,
+    width: 300,
+    height: 520,
     webPreferences: {
       nodeIntegration: true
     }
@@ -34,7 +34,7 @@ function createWindow () {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
@@ -82,17 +82,6 @@ app.on('ready', async () => {
 
   }
   createWindow()
-  const notifier = require('node-notifier');
-  notifier.notify({
-    appName: 'com.myapp.id',
-    title: "Hello",
-    message: "Hello world!",
-    wait: true
-  }, (err) => {
-    if (err) {
-      console.error('Snoretoast error: ', err);
-    }
-  });
 })
 
 // Exit cleanly on request from parent process in development mode.

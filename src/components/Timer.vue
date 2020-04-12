@@ -2,11 +2,8 @@
   <v-container id="site-container" fluid>
     <div class="timer">
       <span class="timer-ssession js-session white--text">{{ isBreakTime ? 'break' : 'work' }}</span>
-
-      <!-- <span class="timer-countdown js-countdown white--text">{{`${hour}:${minutes}:${seconds}`}}</span> -->
       <span class="timer-countdown js-countdown white--text" v-if="isOverHour" >{{`${hour}:${minutes}:${seconds}`}}</span>
       <span class="timer-countdown js-countdown white--text" v-else >{{`${minutes}:${seconds}`}}</span>
-
     </div>
 
     <div class="controllers">
@@ -16,27 +13,10 @@
         <Information />
         <Done @done="done" :isBreakTime="isBreakTime"/>
         <StopWatch @stopWatch="stopWatch" :isTimerActive="isTimerActive" :isBreakTime="isBreakTime"/>
-        <!-- <v-col cols=3>
-          <v-btn text small fab outlined @click="toggleStopWatch" class="btn-md">
-            <v-icon class="white--text">mdi-camera-timer </v-icon>
-          </v-btn>
-        </v-col> -->
-        <!-- <v-col cols=3 class="green lighten-3"> -->
-        <v-col cols=3>
-          <div class="align-center">
-            <v-btn text small fab outlined title="info" class="btn-sm">
-              <v-icon class="white--text">mdi-settings</v-icon>
-            </v-btn>
-          </div>
-        </v-col>
+        <TimerSettings @timerSettings="timerSettings" :isTimerActive="isTimerActive"/>
       </v-row >
-
-      <!-- <app-modal v-if="isModalOpen" @close="closeModal">
-        <h3 slot="header">Pomodoro</h3>
-        <p slot="body">The pomodoro technique is a time management method that uses a timer to break down work into intervals separated by short breaks.</p>
-      </app-modal> -->
-
     </div>
+
   </v-container>
 
 </template>
@@ -47,6 +27,7 @@ import Play from './Play'
 import Information from './Information'
 import Done from './Done'
 import StopWatch from './StopWatch'
+import TimerSettings from './TimerSettings'
 export default {
   components: {
     Reset,
@@ -54,6 +35,7 @@ export default {
     Play,
     Done,
     StopWatch,
+    TimerSettings,
   },
   data() {
     return {
@@ -65,7 +47,7 @@ export default {
       isBreakTime: false,
       isTimerActive: false,
       isOverHour: false,
-      hour: 1,
+      hour: 0,
       minutes: '25',
       seconds: '00',
       timer: null,
@@ -84,7 +66,9 @@ export default {
         let isBreak = self.isBreakTime;
         if (seconds === 0) {
           if (minutes === 0) {
-            // Count
+            // pomodoro count up
+            if (!self.isBreakTime) localStorage.pomodoro = Number(localStorage.pomodoro)+1;
+            // Count Reset
             self.seconds = '00'
             isBreak ? self.minutes = self.initWork : self.minutes = self.initShortBreak;
             self.isBreakTime = !self.isBreakTime;
@@ -94,6 +78,7 @@ export default {
             let title = isBreak ? "Break" : "Work"
             var notification = new Notification(title, {body: 'time up !!'})
             self.isTimerActive = !self.isTimerActive
+            new Audio('/se_maoudamashii_jingle04.mp3').play()
           } else {
             minutes <= 10 ? self.minutes = `0${minutes - 1}` : self.minutes = `${minutes - 1}`;
             self.seconds = '59';
@@ -109,8 +94,9 @@ export default {
         if (seconds === 59) {
           if (minutes === 59) {
             self.isOverHour = true
+            self.hour++
             self.minutes = '00'
-            self.seconds = '00';
+            self.seconds = '00'
           } else {
             minutes <= 10 ? self.minutes = `0${minutes + 1}` : self.minutes = `${minutes + 1}`;
             self.seconds = '00';
@@ -128,12 +114,16 @@ export default {
       self.isTimerActive = !self.isTimerActive;
     },
     play: function() {
+      // this.minutes = '00'
+      // this.seconds = '02'
       this.isCountUp = false
       this.toggleTimer()
     },
     stopWatch: function() {
-      this.minutes = '00'
-      this.seconds = '00'
+      this.isOverHour = true
+      this.hour = '1'
+      this.minutes = '22'
+      this.seconds = '59'
       this.isCountUp = true
       this.toggleTimer()
     },
@@ -150,6 +140,16 @@ export default {
     done: function()  {
       if (this.isBreakTime) return
       clearInterval(this.timer);
+      // pomodoro count
+      if (this.isCountUp) {
+        let total_minutes = Number(this.minutes) + Number(this.hour*60)
+        let pomodoro = Math.floor(total_minutes/30)
+        if (total_minutes%30 > 15) pomodoro++
+        localStorage.pomodoro = Number(localStorage.pomodoro)+pomodoro
+      } else {
+        localStorage.pomodoro = Number(localStorage.pomodoro)+1
+      }
+      // timer reset
       this.minutes = this.initShortBreak
       this.isTimerActive = false;
       this.isCountUp = false
@@ -157,6 +157,18 @@ export default {
       this.seconds = '00';
       this.isBreakTime = true
       this.$emit('timeUp', this.isBreakTime);
+    },
+    timerSettings: function(sliderWork, sliderBreak)  {
+
+      sliderWork < 10 ? this.initWork = String(`0${sliderWork}`) : this.initWork = String(`${sliderWork}`)
+      sliderBreak < 10 ? this.initShortBreak = String(`0${sliderBreak}`) : this.initShortBreak = String(`${sliderBreak}`)
+      console.log(this.initShortBreak);
+      // this.initWork = String(sliderWork)
+      // this.initShortBreak= String(sliderBreak)
+
+      this.isBreakTime ? this.minutes = this.initShortBreak : this.minutes = this.initWork;
+      this.seconds = '00';
+      clearInterval(this.timer);
     },
   },
 }

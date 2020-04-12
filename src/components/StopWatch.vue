@@ -1,6 +1,6 @@
 <template>
   <v-col cols=3>
-    <v-btn text small fab outlined @click="stopWatch" class="btn-md" :disabled="isTimerActive || isBreakTime">
+    <v-btn text small fab outlined dark title="count up timer" @click="stopWatch" class="btn-md" :disabled="isTimerActive || isBreakTime">
       <v-icon class="white--text">mdi-camera-timer </v-icon>
     </v-btn>
   </v-col>

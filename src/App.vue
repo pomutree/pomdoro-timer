@@ -1,5 +1,5 @@
 <template>
-  <v-app id="site" v-bind:style="{ 'background-color': siteTheme }">
+  <v-app id="site" :style="{ 'background-color': siteTheme }">
     <div id="titleBar" >
     </div>
     <v-app-bar app flat color="transparent" >
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import Timer from './components/Timer'
 export default {
   components: {
@@ -25,8 +26,12 @@ export default {
   },
   data () {
     return {
-      siteTheme: '#a83232'
+      siteTheme: '#a83232',
     }
+  },
+  mounted() {
+    localStorage.start = moment().format('YYYY/MM/DD hh:mm:ss')
+    localStorage.pomodoro = 0;
   },
   methods: {
     siteThemeChange: function (isBreakTime) {
@@ -43,10 +48,6 @@ export default {
     -webkit-app-region: drag; /* ドラッグでwindowの移動可能にする */
     text-align: right;
   }
-  // #closed {
-  //   margin: 5px;
-  //   background-color: blue;
-  // }
   main {
     -webkit-app-region: no-drag; /* ドラッグでwindowの移動可能にする */
   }

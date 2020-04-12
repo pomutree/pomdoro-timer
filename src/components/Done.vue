@@ -1,6 +1,6 @@
 <template>
   <v-col cols=3>
-    <v-btn text small fab outlined @click="done" class="btn-sm" :disabled="isBreakTime">
+    <v-btn text small fab outlined dark title="done" @click="done" class="btn-sm" :disabled="isBreakTime">
       <v-icon class="white--text">mdi-check-bold</v-icon>
     </v-btn>
   </v-col>

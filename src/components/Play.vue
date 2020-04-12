@@ -1,6 +1,6 @@
 <template>
   <v-col cols=4>
-    <v-btn text x-large fab outlined @click="toggleTimer" class="btn-md" :disabled="isCountUp">
+    <v-btn text x-large fab outlined dark @click="toggleTimer" class="btn-md" :disabled="isCountUp">
       <span v-if="isTimerActive" class="flex-center">
         <v-icon class="white--text">mdi-pause</v-icon>
       </span>
