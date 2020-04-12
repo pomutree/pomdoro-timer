@@ -41,6 +41,7 @@ export default {
     return {
       initWork: '25',
       initShortBreak: '05',
+      initLongBreak: '15',
 
       // App state
       isCountUp: false,
@@ -70,7 +71,15 @@ export default {
             if (!self.isBreakTime) localStorage.pomodoro = Number(localStorage.pomodoro)+1;
             // Count Reset
             self.seconds = '00'
-            isBreak ? self.minutes = self.initWork : self.minutes = self.initShortBreak;
+            if (!isBreak) {
+              if (Number(localStorage.pomodoro)%4 == 0) {
+                self.minutes = self.initLongBreak
+              } else {
+                self.minutes = self.initShortBreak
+              }
+            } else {
+              self.minutes = self.initWork
+            }
             self.isBreakTime = !self.isBreakTime;
             self.$emit('timeUp', self.isBreakTime);
             clearInterval(self.timer)
@@ -114,8 +123,6 @@ export default {
       self.isTimerActive = !self.isTimerActive;
     },
     play: function() {
-      // this.minutes = '00'
-      // this.seconds = '02'
       this.isCountUp = false
       this.toggleTimer()
     },
@@ -158,14 +165,10 @@ export default {
       this.isBreakTime = true
       this.$emit('timeUp', this.isBreakTime);
     },
-    timerSettings: function(sliderWork, sliderBreak)  {
-
-      sliderWork < 10 ? this.initWork = String(`0${sliderWork}`) : this.initWork = String(`${sliderWork}`)
-      sliderBreak < 10 ? this.initShortBreak = String(`0${sliderBreak}`) : this.initShortBreak = String(`${sliderBreak}`)
-      console.log(this.initShortBreak);
-      // this.initWork = String(sliderWork)
-      // this.initShortBreak= String(sliderBreak)
-
+    timerSettings: function(Work, ShortBreak, LongBreak)  {
+      Work < 10 ? this.initWork = String(`0${Work}`) : this.initWork = String(`${Work}`)
+      ShortBreak < 10 ? this.initShortBreak = String(`0${ShortBreak}`) : this.initShortBreak = String(`${ShortBreak}`)
+      LongBreak < 10 ? this.initLongBreak = String(`0${LongBreak}`) : this.initLongBreak = String(`${LongBreak}`)
       this.isBreakTime ? this.minutes = this.initShortBreak : this.minutes = this.initWork;
       this.seconds = '00';
       clearInterval(this.timer);

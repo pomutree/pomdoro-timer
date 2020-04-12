@@ -24,9 +24,23 @@
 
           <v-card-text>
             <div class="title">Short break</div>
-            <div class="body-2">{{ sliderBreak }}</div>
+            <div class="body-2">{{ sliderShortBreak }}</div>
             <v-slider
-              v-model="sliderBreak"
+              v-model="sliderShortBreak"
+              color="gray"
+              track-color="gray"
+              thumb-color="error"
+              class="align-center"
+              :max="max"
+              :min="min"
+            ></v-slider>
+          </v-card-text>
+
+          <v-card-text>
+            <div class="title">Long break</div>
+            <div class="body-2">{{ sliderLongBreak }}</div>
+            <v-slider
+              v-model="sliderLongBreak"
               color="gray"
               track-color="gray"
               thumb-color="error"
@@ -50,7 +64,8 @@ export default {
   data: () => ({
     sheet: false,
     sliderWork: 25,
-    sliderBreak: 5,
+    sliderShortBreak: 5,
+    sliderLongBreak: 15,
     min: 1,
     max: 60,
   }),
@@ -60,7 +75,7 @@ export default {
   methods: {
     toggleSave: function() {
       this.sheet=false
-      this.$emit('timerSettings', this.sliderWork, this.sliderBreak)
+      this.$emit('timerSettings', this.sliderWork, this.sliderShortBreak, this.sliderLongBreak)
     },
   },
 };
