@@ -30,7 +30,7 @@ export default {
     }
   },
   mounted() {
-    localStorage.start = moment().format('YYYY/MM/DD hh:mm:ss')
+    localStorage.start = moment().format('YYYY/MM/DD HH:mm:ss Z')
     localStorage.pomodoro = 0;
   },
   methods: {
