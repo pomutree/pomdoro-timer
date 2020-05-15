@@ -85,7 +85,7 @@ export default {
             clearInterval(self.timer)
             // notification
             let title = isBreak ? "Break" : "Work"
-            let notification = new Notification(title, {body: 'time up !!'}) // eslint-disable-line no-unused-vars
+            new Notification(title, {body: 'time up !!'})
             self.isTimerActive = !self.isTimerActive
             new Audio('/se_maoudamashii_jingle04.mp3').play()
           } else {
