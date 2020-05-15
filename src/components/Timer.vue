@@ -85,7 +85,7 @@ export default {
             clearInterval(self.timer)
             // notification
             let title = isBreak ? "Break" : "Work"
-            var notification = new Notification(title, {body: 'time up !!'})
+            new Notification(title, {body: 'time up !!'})
             self.isTimerActive = !self.isTimerActive
             new Audio('/se_maoudamashii_jingle04.mp3').play()
           } else {
@@ -99,7 +99,6 @@ export default {
       function countUp() {
         let seconds = Number(self.$data.seconds);
         let minutes = Number(self.$data.minutes);
-        let isBreak = self.isBreakTime;
         if (seconds === 59) {
           if (minutes === 59) {
             self.isOverHour = true
