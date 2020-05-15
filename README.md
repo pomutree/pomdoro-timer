@@ -1,5 +1,5 @@
 # pomodoro
-a
+
 ## Project setup
 ```
 yarn install
