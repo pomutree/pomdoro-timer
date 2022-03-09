@@ -1,9 +1,9 @@
 <template>
   <v-container id="site-container" fluid>
     <div class="timer">
-      <span class="timer-ssession js-session white--text">{{ isBreakTime ? 'break' : 'work' }}</span>
-      <span class="timer-countdown js-countdown white--text" v-if="isOverHour" >{{`${hour}:${minutes}:${seconds}`}}</span>
-      <span class="timer-countdown js-countdown white--text" v-else >{{`${minutes}:${seconds}`}}</span>
+      <span class="font-weight-medium white--text">{{ isBreakTime ? 'break' : 'work' }}</span>
+      <span class="timer-countdown white--text" v-if="isOverHour" >{{`${hour}:${minutes}:${seconds}`}}</span>
+      <span class="timer-countdown white--text" v-else >{{`${minutes}:${seconds}`}}</span>
     </div>
 
     <div class="controllers">
@@ -14,6 +14,11 @@
         <Done @done="done" :isBreakTime="isBreakTime"/>
         <StopWatch @stopWatch="stopWatch" :isTimerActive="isTimerActive" :isBreakTime="isBreakTime"/>
         <TimerSettings @timerSettings="timerSettings" :isTimerActive="isTimerActive"/>
+        <v-col cols=3>
+          <v-btn text small fab outlined dark title="done" @click="duplicate" class="btn-sm">
+            <v-icon class="white--text">mdi-content-duplicate</v-icon>
+          </v-btn>
+        </v-col>
       </v-row >
     </div>
 
@@ -22,12 +27,13 @@
 </template>
 
 <script>
+import { ipcRenderer } from 'electron'
 import Reset from './Reset'
 import Play from './Play'
 import Information from './Information'
 import Done from './Done'
 import StopWatch from './StopWatch'
-import TimerSettings from './TimerSettings'
+import TimerSettings from '@/components/settings/General'
 export default {
   components: {
     Reset,
@@ -60,66 +66,65 @@ export default {
   },
   methods: {
     toggleTimer: function() {
-      let self = this;
-      function countDown() {
-        let seconds = Number(self.$data.seconds);
-        let minutes = Number(self.$data.minutes);
-        let isBreak = self.isBreakTime;
+      const countDown = () => {
+        let seconds = Number(this.$data.seconds);
+        let minutes = Number(this.$data.minutes);
+        let isBreak = this.isBreakTime;
         if (seconds === 0) {
           if (minutes === 0) {
             // pomodoro count up
-            if (!self.isBreakTime) localStorage.pomodoro = Number(localStorage.pomodoro)+1;
+            if (!this.isBreakTime) localStorage.pomodoro = Number(localStorage.pomodoro)+1;
             // Count Reset
-            self.seconds = '00'
+            this.seconds = '00'
             if (!isBreak) {
               if (Number(localStorage.pomodoro)%4 == 0) {
-                self.minutes = self.initLongBreak
+                this.minutes = this.initLongBreak
               } else {
-                self.minutes = self.initShortBreak
+                this.minutes = this.initShortBreak
               }
             } else {
-              self.minutes = self.initWork
+              this.minutes = this.initWork
             }
-            self.isBreakTime = !self.isBreakTime;
-            self.$emit('timeUp', self.isBreakTime);
-            clearInterval(self.timer)
+            this.isBreakTime = !this.isBreakTime;
+            this.$emit('timeUp', this.isBreakTime);
+            clearInterval(this.timer)
             // notification
             let title = isBreak ? "Break" : "Work"
-            let notification = new Notification(title, {body: 'time up !!'}) // eslint-disable-line no-unused-vars
-            self.isTimerActive = !self.isTimerActive
+            new Notification(title, {body: 'time up !!'})
+            this.isTimerActive = !this.isTimerActive
             new Audio('/se_maoudamashii_jingle04.mp3').play()
           } else {
-            minutes <= 10 ? self.minutes = `0${minutes - 1}` : self.minutes = `${minutes - 1}`;
-            self.seconds = '59';
+            minutes <= 10 ? this.minutes = `0${minutes - 1}` : this.minutes = `${minutes - 1}`;
+            this.seconds = '59';
           }
         } else {
-          seconds <= 10 ? self.seconds = `0${seconds - 1}` : self.seconds = `${seconds - 1}`;
+          seconds <= 10 ? this.seconds = `0${seconds - 1}` : this.seconds = `${seconds - 1}`;
         }
       }
-      function countUp() {
-        let seconds = Number(self.$data.seconds);
-        let minutes = Number(self.$data.minutes);
+      const countUp = () => {
+        let seconds = Number(this.$data.seconds);
+        let minutes = Number(this.$data.minutes);
         if (seconds === 59) {
           if (minutes === 59) {
-            self.isOverHour = true
-            self.hour++
-            self.minutes = '00'
-            self.seconds = '00'
+            this.isOverHour = true
+            this.hour++
+            this.minutes = '00'
+            this.seconds = '00'
           } else {
-            minutes <= 10 ? self.minutes = `0${minutes + 1}` : self.minutes = `${minutes + 1}`;
-            self.seconds = '00';
+            minutes <= 10 ? this.minutes = `0${minutes + 1}` : this.minutes = `${minutes + 1}`;
+            this.seconds = '00';
           }
         } else {
-          seconds < 9 ? self.seconds = `0${seconds + 1}` : self.seconds = `${seconds + 1}`;
+          seconds < 9 ? this.seconds = `0${seconds + 1}` : this.seconds = `${seconds + 1}`;
         }
       }
 
       if (this.isCountUp) {
-        self.isTimerActive ? clearInterval(self.timer) : self.timer = setInterval(countUp, 1000);
+        this.isTimerActive ? clearInterval(this.timer) : this.timer = setInterval(countUp, 1000);
       } else {
-        self.isTimerActive ? clearInterval(self.timer) : self.timer = setInterval(countDown, 1000);
+        this.isTimerActive ? clearInterval(this.timer) : this.timer = setInterval(countDown, 1000);
       }
-      self.isTimerActive = !self.isTimerActive;
+      this.isTimerActive = !this.isTimerActive;
     },
     play: function() {
       this.isCountUp = false
@@ -172,6 +177,11 @@ export default {
       this.seconds = '00';
       clearInterval(this.timer);
     },
+    duplicate () {
+      this.isTimerActive = false;
+      clearInterval(this.timer);
+      ipcRenderer.send('duplicateMainWindow')
+    }
   },
 }
 </script>
@@ -219,7 +229,6 @@ export default {
       height: 80%;
     }
   }
-  .timer-ssession { font-weight: 500; }
   .timer-countdown { font-size: 2.5rem; }
 
 </style>

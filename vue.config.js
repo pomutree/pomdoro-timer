@@ -13,7 +13,13 @@ module.exports = {
         },win: {
           icon: 'src/assets/favicon.ico',
         },
-      }
+      },
+      nodeIntegration: true
+    }
+  },
+  configureWebpack: {
+    externals: {
+      sqlite3: 'sqlite3'
     }
   }
 }

@@ -35,7 +35,7 @@ export default {
     }
   },
   methods: {
-    toggleDialog: function (isBreakTime) {
+    toggleDialog () {
       this.dialog = true
       this.start = localStorage.start
       this.pomodoro = localStorage.pomodoro

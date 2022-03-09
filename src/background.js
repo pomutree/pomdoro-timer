@@ -1,10 +1,10 @@
+/*global someFunction, process*/
 'use strict'
 
-import { app, protocol, BrowserWindow, Notification } from 'electron'
-import {
-  createProtocol,
-  /* installVueDevtools */
-} from 'vue-cli-plugin-electron-builder/lib'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
+import sqlite3 from 'sqlite3'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required')
 
@@ -15,23 +15,25 @@ let win
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
 
-function createWindow () {
+const createWindow = () => {
   // Create the browser window.
-  win = new BrowserWindow({
+  const win = new BrowserWindow({
     frame: false,
     resizable: false,
     width: 300,
     height: 550,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false 
     }
   })
-  win.setMenu(null);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    // if (!process.env.IS_TEST) win.webContents.openDevTools()
+    if (!process.env.IS_TEST) {
+      win.webContents.openDevTools({ mode: 'detach' })
+    }
   } else {
     createProtocol('app')
     // Load the index.html when not in development
@@ -42,6 +44,29 @@ function createWindow () {
     win = null
   })
 }
+
+ipcMain.handle('closeWindow', async () => {
+  // BrowserWindow.getFocusedWindow().destroy()
+  if (BrowserWindow.getAllWindows().length < 2) {
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  }
+  BrowserWindow.getFocusedWindow().destroy()
+})
+
+ipcMain.handle('minimizeWindow', async () => {
+  BrowserWindow.getFocusedWindow().minimize()
+})
+
+ipcMain.on('duplicateMainWindow', async () => {
+  createWindow()
+})
+
+ipcMain.handle('saveSettings', async (event, args) => {
+  // BrowserWindow.getFocusedWindow().destroy()
+  console.log(args);
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
