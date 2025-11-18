@@ -20,5 +20,6 @@ yarn-error.log*
 *.sln
 *.sw?
 
-#Electron-builder output
-/dist_electron
+# Tauri build output
+/src-tauri/target
+/src-tauri/gen

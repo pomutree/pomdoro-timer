@@ -1,9 +1,14 @@
 <template>
-  <v-col cols=3>
-    <v-btn text small fab outlined dark title="count up timer" @click="stopWatch" class="btn-md" :disabled="isTimerActive || isBreakTime">
-      <v-icon class="white--text">mdi-camera-timer </v-icon>
-    </v-btn>
-  </v-col>
+  <button
+    type="button"
+    class="icon-button"
+    :disabled="isTimerActive || isBreakTime"
+    @click="onStopWatch"
+    title="Start stopwatch"
+  >
+    <span class="mdi mdi-camera-timer icon-button__icon" aria-hidden="true"></span>
+    <span class="sr-only">Start stopwatch</span>
+  </button>
 </template>
 
 <script>
@@ -13,8 +18,8 @@ export default {
     isTimerActive: Boolean,
   },
   methods: {
-    stopWatch: function() {
-      this.$emit('stopWatch')
+    onStopWatch() {
+      this.$emit('stopWatch');
     },
   },
 };

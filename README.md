@@ -1,25 +1,37 @@
 # pomodoro
 
 ## Project setup
-```
+
+```bash
 yarn install
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
+### Run Vite dev server
+
+```bash
+yarn dev
 ```
 
-### Compiles and minifies for production
+### Develop the Tauri desktop app
+
+```bash
+yarn tauri:dev
 ```
+
+### Build for production (web)
+
+```bash
 yarn build
 ```
 
-### Lints and fixes files
-```
-yarn lint
-./node_modules/.bin/eslint
+### Build the Tauri desktop app
+
+```bash
+yarn tauri:build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Lint source files
+
+```bash
+yarn lint
+```

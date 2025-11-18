@@ -1,9 +1,14 @@
 <template>
-  <v-col cols=3>
-    <v-btn text small fab outlined dark title="done" @click="done" class="btn-sm" :disabled="isBreakTime">
-      <v-icon class="white--text">mdi-check-bold</v-icon>
-    </v-btn>
-  </v-col>
+  <button
+    type="button"
+    class="icon-button icon-button--small"
+    :disabled="isBreakTime"
+    @click="onDone"
+    title="Complete session"
+  >
+    <span class="mdi mdi-check-bold icon-button__icon" aria-hidden="true"></span>
+    <span class="sr-only">Complete session</span>
+  </button>
 </template>
 
 <script>
@@ -12,8 +17,8 @@ export default {
     isBreakTime: Boolean,
   },
   methods: {
-    done: function() {
-      this.$emit('done')
+    onDone() {
+      this.$emit('done');
     },
   },
 };

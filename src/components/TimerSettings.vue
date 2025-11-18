@@ -1,66 +1,73 @@
 <template>
-  <v-col cols=3>
-    <div class="align-center">
-      <v-btn text small fab outlined dark color="white" title="settings" @click="sheet=true" class="btn-sm" :disabled="isTimerActive">
-        <v-icon class="white--text">mdi-settings</v-icon>
-      </v-btn>
+  <div>
+    <button
+      type="button"
+      class="icon-button icon-button--small"
+      :disabled="isTimerActive"
+      @click="open"
+      title="Timer settings"
+    >
+      <span class="mdi mdi-settings icon-button__icon" aria-hidden="true"></span>
+      <span class="sr-only">Timer settings</span>
+    </button>
+
+    <div v-if="sheet" class="modal-backdrop" @click.self="close">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <h2 class="modal__title" id="settings-title">Timer settings</h2>
+        <div class="settings">
+          <div class="settings__group">
+            <label class="settings__label" for="work-slider">Work (minutes)</label>
+            <span class="settings__value">{{ sliderWork }}</span>
+            <input
+              id="work-slider"
+              class="settings__slider"
+              type="range"
+              :min="min"
+              :max="max"
+              v-model.number="sliderWork"
+            />
+          </div>
+
+          <div class="settings__group">
+            <label class="settings__label" for="short-slider">Short break (minutes)</label>
+            <span class="settings__value">{{ sliderShortBreak }}</span>
+            <input
+              id="short-slider"
+              class="settings__slider"
+              type="range"
+              :min="min"
+              :max="max"
+              v-model.number="sliderShortBreak"
+            />
+          </div>
+
+          <div class="settings__group">
+            <label class="settings__label" for="long-slider">Long break (minutes)</label>
+            <span class="settings__value">{{ sliderLongBreak }}</span>
+            <input
+              id="long-slider"
+              class="settings__slider"
+              type="range"
+              :min="min"
+              :max="max"
+              v-model.number="sliderLongBreak"
+            />
+          </div>
+        </div>
+
+        <div class="modal__actions">
+          <button type="button" class="modal__button" @click="apply">Save</button>
+        </div>
+      </div>
     </div>
-    <div class="text-center">
-      <v-bottom-sheet v-model="sheet" persistent>
-        <v-sheet class="text-center">
-          <v-card-text>
-            <div class="title">Work</div>
-            <div class="body-2">{{ sliderWork }}</div>
-            <v-slider
-              v-model="sliderWork"
-              color="gray"
-              track-color="gray"
-              thumb-color="error"
-              class="align-center"
-              :max="max"
-              :min="min"
-            ></v-slider>
-          </v-card-text>
-
-          <v-card-text>
-            <div class="title">Short break</div>
-            <div class="body-2">{{ sliderShortBreak }}</div>
-            <v-slider
-              v-model="sliderShortBreak"
-              color="gray"
-              track-color="gray"
-              thumb-color="error"
-              class="align-center"
-              :max="max"
-              :min="min"
-            ></v-slider>
-          </v-card-text>
-
-          <v-card-text>
-            <div class="title">Long break</div>
-            <div class="body-2">{{ sliderLongBreak }}</div>
-            <v-slider
-              v-model="sliderLongBreak"
-              color="gray"
-              track-color="gray"
-              thumb-color="error"
-              class="align-center"
-              :max="max"
-              :min="min"
-            ></v-slider>
-          </v-card-text>
-
-          <v-btn class="mt-6" color="error" @click="toggleSave">close</v-btn>
-          <br>
-          <br>
-        </v-sheet>
-      </v-bottom-sheet>
-    </div>
-  </v-col>
+  </div>
 </template>
 
 <script>
 export default {
+  props: {
+    isTimerActive: Boolean,
+  },
   data: () => ({
     sheet: false,
     sliderWork: 25,
@@ -69,13 +76,16 @@ export default {
     min: 1,
     max: 60,
   }),
-  props: {
-    isTimerActive: Boolean,
-  },
   methods: {
-    toggleSave: function() {
-      this.sheet=false
-      this.$emit('timerSettings', this.sliderWork, this.sliderShortBreak, this.sliderLongBreak)
+    open() {
+      this.sheet = true;
+    },
+    close() {
+      this.sheet = false;
+    },
+    apply() {
+      this.sheet = false;
+      this.$emit('timerSettings', this.sliderWork, this.sliderShortBreak, this.sliderLongBreak);
     },
   },
 };

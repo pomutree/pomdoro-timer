@@ -1,17 +1,15 @@
 <template>
-  <v-col cols=4>
-    <div style="height: 0.5rem;"></div>
-    <v-btn text fab outlined dark @click="reset" class="btn-sm">
-      <v-icon class="white--text">mdi-replay</v-icon>
-    </v-btn>
-  </v-col>
+  <button type="button" class="icon-button icon-button--small" @click="onReset" title="Reset timer">
+    <span class="mdi mdi-replay icon-button__icon" aria-hidden="true"></span>
+    <span class="sr-only">Reset timer</span>
+  </button>
 </template>
 
 <script>
 export default {
   methods: {
-    reset: function() {
-      this.$emit('reset')
+    onReset() {
+      this.$emit('reset');
     },
   },
 };
